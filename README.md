@@ -22,8 +22,13 @@ Install dependencies with:
 
 ```sh
 python -m venv venvKef_Desktop_Control
+```
+```sh
 .\venvKef_Desktop_Control\Scripts\activate
+```
+```sh
 pip install aiokef customtkinter nest_asyncio
+```
 
 ## Usage
 
