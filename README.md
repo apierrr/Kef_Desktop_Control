@@ -1,0 +1,1 @@
+build command : pyinstaller --onefile --noconsole --icon=kef.ico --add-data "kef.ico;." --add-data "{originpath}\KEF_\venvKef\Lib\site-packages\aiokef\_static_version.py;aiokef" main.py
