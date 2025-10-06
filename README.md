@@ -27,7 +27,7 @@ python -m venv venvKef_Desktop_Control
 .\venvKef_Desktop_Control\Scripts\activate
 ```
 ```sh
-pip install aiokef customtkinter nest_asyncio
+pip install aiokef customtkinter nest_asyncio setuptools
 ```
 
 ## Usage
