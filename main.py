@@ -24,7 +24,7 @@ async def kef_bluetooth():
     await lsx.set_source("Bluetooth")
 
 async def kef_opt():
-    await lsx.set_source("Optical")
+    await lsx.set_source("Opt")
 
 async def kef_wifi():
     await lsx.set_source("Wifi")
