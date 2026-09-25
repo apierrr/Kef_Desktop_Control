@@ -1,0 +1,543 @@
+/* ==========================================================================
+   KEF LSX Web Control — Fluent Design 2
+   Mica + Acrylic + Reveal effects, dark theme
+   ========================================================================== */
+
+:root {
+  /* Accent (Windows blue par défaut) */
+  --accent: #60cdff;
+  --accent-secondary: #0078d4;
+  --accent-tertiary: #005a9e;
+
+  /* Backgrounds */
+  --bg-base: #1a1a1a;
+  --card-fill: rgba(255, 255, 255, 0.0512);
+  --card-fill-hover: rgba(255, 255, 255, 0.0837);
+  --card-stroke: rgba(255, 255, 255, 0.0698);
+  --subtle-fill: rgba(255, 255, 255, 0.0326);
+  --subtle-fill-hover: rgba(255, 255, 255, 0.0605);
+  --subtle-fill-pressed: rgba(255, 255, 255, 0.0419);
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.786);
+  --text-tertiary: rgba(255, 255, 255, 0.544);
+  --text-disabled: rgba(255, 255, 255, 0.363);
+
+  /* Status */
+  --error: #ff6b6b;
+  --error-bg: rgba(255, 107, 107, 0.12);
+  --error-border: rgba(255, 107, 107, 0.35);
+  --success: #6ccb5f;
+
+  /* Geometry — Fluent corner radius */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 8px;
+
+  /* Animation — Fluent timings */
+  --easing: cubic-bezier(0.1, 0.9, 0.2, 1);
+  --duration-fast: 167ms;
+  --duration-normal: 250ms;
+  --duration-slow: 333ms;
+
+  /* Stroke widths */
+  --stroke: 1px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system,
+               BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "ss02", "cv01";
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==========================================================================
+   Mica background
+   ========================================================================== */
+
+.mica-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, #1c1c1c 0%, #181818 100%);
+  overflow: hidden;
+}
+
+.mica-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+.mica-glow-1 {
+  top: -20%;
+  left: -10%;
+  width: 60%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(0, 120, 212, 0.6), transparent 70%);
+  animation: drift1 24s ease-in-out infinite alternate;
+}
+
+.mica-glow-2 {
+  bottom: -25%;
+  right: -15%;
+  width: 70%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(120, 60, 200, 0.4), transparent 70%);
+  animation: drift2 30s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+  to { transform: translate(40px, 30px) scale(1.1); }
+}
+@keyframes drift2 {
+  to { transform: translate(-30px, -40px) scale(1.05); }
+}
+
+/* Noise grain pour le rendu Mica */
+.mica-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.container {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 28px 20px max(20px, env(safe-area-inset-bottom));
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.app-header {
+  padding: 4px 4px 8px;
+}
+
+.title-block h1 {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  transition: background var(--duration-normal) var(--easing),
+              box-shadow var(--duration-normal) var(--easing);
+}
+
+.status.online .status-dot {
+  background: var(--success);
+  box-shadow: 0 0 8px rgba(108, 203, 95, 0.6);
+}
+
+.status.offline .status-dot {
+  background: var(--error);
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+}
+
+/* ==========================================================================
+   Acrylic cards
+   ========================================================================== */
+
+.card {
+  background: var(--card-fill);
+  border: var(--stroke) solid var(--card-stroke);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  backdrop-filter: blur(40px) saturate(125%);
+  -webkit-backdrop-filter: blur(40px) saturate(125%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  transition: opacity var(--duration-normal) var(--easing);
+}
+
+.card h2 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.card.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Source buttons (Fluent reveal effect)
+   ========================================================================== */
+
+.sources-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.source-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 10px;
+  background: var(--subtle-fill);
+  border: var(--stroke) solid rgba(255, 255, 255, 0.0837);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  isolation: isolate;
+  transition: background var(--duration-fast) var(--easing),
+              border-color var(--duration-fast) var(--easing),
+              transform 100ms var(--easing);
+}
+
+/* Reveal effect — light follows cursor */
+.source-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    160px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.08),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Border reveal effect (Fluent signature) */
+.source-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    120px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.5),
+    transparent 50%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.source-btn:hover { background: var(--subtle-fill-hover); }
+.source-btn:hover::before,
+.source-btn:hover::after { opacity: 1; }
+
+.source-btn:active {
+  background: var(--subtle-fill-pressed);
+  transform: scale(0.985);
+}
+
+.source-icon,
+.source-label {
+  position: relative;
+  z-index: 2;
+}
+
+.source-icon {
+  width: 26px;
+  height: 26px;
+  color: var(--text-secondary);
+  transition: color var(--duration-fast) var(--easing),
+              transform var(--duration-normal) var(--easing);
+}
+
+.source-btn:hover .source-icon {
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+.source-label {
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+/* État actif */
+.source-btn.active {
+  background: linear-gradient(180deg,
+              rgba(96, 205, 255, 0.18),
+              rgba(0, 120, 212, 0.12));
+  border-color: rgba(96, 205, 255, 0.45);
+  box-shadow: 0 0 0 1px rgba(96, 205, 255, 0.25),
+              0 4px 16px rgba(0, 120, 212, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.source-btn.active .source-icon {
+  color: var(--accent);
+}
+
+.source-btn.active::before { opacity: 0; }
+
+/* ==========================================================================
+   Volume
+   ========================================================================== */
+
+.volume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.volume-header h2 {
+  margin-bottom: 0;
+}
+
+.volume-value {
+  font-size: 36px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.slider-wrap {
+  padding: 12px 0 8px;
+}
+
+/* Fluent slider — reset */
+.slider {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.slider:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Track WebKit */
+.slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background:
+    linear-gradient(to right,
+      var(--accent) 0%,
+      var(--accent) calc(var(--fill, 0%) - 7px),
+      transparent calc(var(--fill, 0%) - 7px),
+      transparent calc(var(--fill, 0%) + 7px),
+      rgba(255, 255, 255, 0.18) calc(var(--fill, 0%) + 7px),
+      rgba(255, 255, 255, 0.18) 100%);
+}
+
+/* Thumb WebKit — Fluent style: cercle blanc avec ring accent épais */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 6px solid var(--accent);
+  margin-top: -8px;
+  cursor: grab;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(0, 0, 0, 0.1);
+  transition: transform 100ms var(--easing),
+              border-width 100ms var(--easing);
+}
+
+.slider:hover::-webkit-slider-thumb { transform: scale(1.1); }
+.slider:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  border-width: 4px;
+  transform: scale(0.92);
+}
+
+/* Track Firefox */
+.slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.slider::-moz-range-thumb {
+  width: 8px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 6px solid var(--accent);
+  cursor: grab;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 100ms var(--easing);
+}
+.slider:hover::-moz-range-thumb { transform: scale(1.1); }
+.slider:active::-moz-range-thumb { cursor: grabbing; transform: scale(0.92); }
+
+.volume-marks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+  padding: 0 2px;
+}
+
+/* ==========================================================================
+   Off button
+   ========================================================================== */
+
+.off-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  margin-top: auto;
+  background: var(--error-bg);
+  border: var(--stroke) solid var(--error-border);
+  border-radius: var(--radius);
+  color: var(--error);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  transition: background var(--duration-fast) var(--easing),
+              border-color var(--duration-fast) var(--easing),
+              transform 100ms var(--easing);
+}
+
+.off-btn:hover {
+  background: rgba(255, 107, 107, 0.18);
+  border-color: rgba(255, 107, 107, 0.5);
+}
+
+.off-btn:active { transform: scale(0.99); }
+
+.off-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ==========================================================================
+   Toast (notifications Fluent style)
+   ========================================================================== */
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: rgba(40, 40, 40, 0.95);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: var(--stroke) solid var(--card-stroke);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: transform var(--duration-slow) var(--easing),
+              opacity var(--duration-normal) var(--easing);
+  opacity: 0;
+  pointer-events: none;
+  max-width: calc(100vw - 32px);
+  white-space: nowrap;
+  z-index: 100;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast.error {
+  border-color: var(--error-border);
+  color: var(--error);
+}
+
+/* ==========================================================================
+   Responsive — petit mobile
+   ========================================================================== */
+
+@media (max-width: 380px) {
+  .container { padding: 20px 16px; }
+  .title-block h1 { font-size: 28px; }
+  .source-btn { padding: 16px 8px; }
+  .volume-value { font-size: 32px; }
+}
+
+/* Réduit les animations pour ceux qui le préfèrent */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

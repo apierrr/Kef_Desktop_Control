@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1a1a">
+  <title>KEF LSX</title>
+  <link rel="stylesheet" href="/static/style.css?v=2">
+</head>
+<body>
+  <div class="mica-bg" aria-hidden="true">
+    <div class="mica-glow mica-glow-1"></div>
+    <div class="mica-glow mica-glow-2"></div>
+    <div class="mica-noise"></div>
+  </div>
+
+  <main class="container">
+    <header class="app-header">
+      <div class="title-block">
+        <h1>KEF&nbsp;LSX</h1>
+        <span class="status" id="status">
+          <span class="status-dot"></span>
+          <span class="status-text">Connexion…</span>
+        </span>
+      </div>
+    </header>
+
+    <section class="card sources-card" aria-labelledby="sources-title">
+      <h2 id="sources-title">Source</h2>
+      <div class="sources-grid">
+        <button class="source-btn" data-source="Wifi" type="button">
+          <svg class="source-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M2 8.5a14 14 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="12" cy="19" r="1.4" fill="currentColor"/>
+          </svg>
+          <span class="source-label">Wifi</span>
+        </button>
+
+        <button class="source-btn" data-source="Bluetooth" type="button">
+          <svg class="source-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 7l10 10-5 4V3l5 4L7 17" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+          <span class="source-label">Bluetooth</span>
+        </button>
+
+        <button class="source-btn" data-source="Aux" type="button">
+          <svg class="source-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2v10m-3 3a3 3 0 1 0 6 0v-3H9v3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 18.5v3M15 18.5v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span class="source-label">Aux</span>
+        </button>
+
+        <button class="source-btn" data-source="Opt" type="button">
+          <svg class="source-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+          <span class="source-label">Optical</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="card volume-card" aria-labelledby="volume-title">
+      <div class="volume-header">
+        <h2 id="volume-title">Volume</h2>
+        <span class="volume-value" id="volumeValue">--</span>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" id="volumeSlider" min="0" max="100" value="0"
+               class="slider" aria-label="Volume">
+      </div>
+      <div class="volume-marks">
+        <span>0</span>
+        <span>50</span>
+        <span>100</span>
+      </div>
+    </section>
+
+    <button class="off-btn" id="offBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3v9M6.3 7.7a8 8 0 1 0 11.4 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Éteindre</span>
+    </button>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/static/app.js?v=2"></script>
+</body>
+</html>

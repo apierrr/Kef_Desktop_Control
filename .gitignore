@@ -1,0 +1,18 @@
+# Données runtime de LMS (jetons Qobuz, logs, cache, ~500 Mo) — jamais versionnées
+lms-config/
+lms-music/
+lms-playlists/
+
+# Config locale
+.env
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Archives de déploiement
+*.tar
+*.tar.gz

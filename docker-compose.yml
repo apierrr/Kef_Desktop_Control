@@ -1,0 +1,28 @@
+services:
+  kef-control:
+    build: .
+    image: kef-control:latest
+    container_name: kef-control
+    restart: unless-stopped
+    ports:
+      - "8765:8765"
+    environment:
+      # IP de l'enceinte KEF LSX sur le LAN — valeur réelle dans .env (non versionné)
+      KEF_IP: "${KEF_IP:-192.168.1.12}"
+      KEF_PORT: "${KEF_PORT:-50001}"
+
+  lms:
+    image: lmscommunity/lyrionmusicserver:latest
+    container_name: lyrion-music-server
+    restart: unless-stopped
+    # Le mode host permet à LMS de diffuser sur le LAN pour trouver les KEF en DLNA
+    network_mode: host
+    volumes:
+      - ./lms-config:/config:rw
+      - ./lms-playlists:/playlist:rw
+      - ./lms-music:/music:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=Europe/Paris
+      - PUID=1000
+      - PGID=1000
