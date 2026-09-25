@@ -6,7 +6,7 @@ FastAPI + frontend Fluent Design 2, servis par un conteneur Docker.
 > ### v2 — from desktop to web
 > La **v1** de ce dépôt était une application desktop Python/CustomTkinter
 > (`main.py` à la racine, packagée avec PyInstaller) : elle reste accessible sous le
-> tag [`v1`](https://github.com/apierrr/Kef_Desktop_Control/tree/v1).
+> tag [`v1`](https://github.com/apierrr/Kef_LSX_Control/tree/v1).
 >
 > La **v2** reprend la même logique de protocole binaire (port 50001, préservation de
 > `standby_time` et de l'orientation, contournement du bug d'extinction) et l'expose en
@@ -31,7 +31,7 @@ FastAPI + frontend Fluent Design 2, servis par un conteneur Docker.
 ## Installation
 
 ```bash
-git clone https://github.com/apierrr/Kef_Desktop_Control.git kef-web-control
+git clone https://github.com/apierrr/Kef_LSX_Control.git kef-web-control
 cd kef-web-control
 ```
 
